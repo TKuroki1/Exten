@@ -1,0 +1,66 @@
+// Función que maneja el clic en el botón de la extensión
+function buttonClicked() {
+  // Crea una ventana emergente con las opciones de descarga
+  let popup = window.open("", "popup", "width=300,height=150");
+
+  // Agrega el HTML de las opciones de descarga a la ventana emergente
+  popup.document.body.innerHTML = `
+    <h2>Seleccione una opción de descarga</h2>
+    <input type="radio" name="option" value="descarga" id="descarga" checked>
+    <label for="descarga">Descarga directa</label><br>
+    <input type="radio" name="option" value="video" id="video">
+    <label for="video">Ver video</label><br>
+    <br>
+    <input type="text" id="link" placeholder="Introduzca el enlace aquí"><br>
+    <br>
+    <button id="ok">OK</button>
+    <button id="cancel">Cerrar</button>
+  `;
+
+  // Maneja el clic en el botón de OK
+  popup.document.getElementById("ok").addEventListener("click", function() {
+    // Obtiene la opción seleccionada
+    let option = popup.document.querySelector('input[name="option"]:checked').value;
+
+    if (option === "descarga") {
+      // Obtiene el enlace introducido por el usuario
+      let link = popup.document.getElementById("link").value;
+
+      // Redirige a la página de descarga
+      window.location.href = link;
+    } else if (option === "video") {
+      // Obtiene el enlace introducido por el usuario
+      let link = popup.document.getElementById("link").value;
+
+      // Crea una nueva ventana con el reproductor de video
+      let videoWindow = window.open("", "video", "width=600,height=400");
+
+      // Agrega el reproductor de video a la nueva ventana
+      videoWindow.document.body.innerHTML = `
+        <video width="600" height="400" controls>
+          <source src="${link}" type="video/mp4">
+          Su navegador no soporta el formato de video.
+        </video>
+        <br>
+        <label for="quality">Calidad:</label>
+        <select id="quality">
+          <option value="360p">360p</option>
+          <option value="480p">480p</option>
+          <option value="720p">720p</option>
+          <option value="1080p">1080p</option>
+        </select>
+        <button id="download">Descargar</button>
+        <button id="close">Cerrar</button>
+      `;
+
+      // Maneja el clic en el botón de Descargar
+      videoWindow.document.getElementById("download").addEventListener("click", function() {
+        // Obtiene la calidad seleccionada
+        let quality = videoWindow.document.getElementById("quality").value;
+
+        // Obtiene el enlace del archivo de video principal
+        let source = videoWindow.document.querySelector('source[type="video/mp4"]').src;
+
+        // Crea un enlace de descarga con la calidad seleccionada
+        let downloadLink = document.createElement("a");
+       
